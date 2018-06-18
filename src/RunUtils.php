@@ -3,7 +3,6 @@
 namespace Differ\RunUtils;
 
 use Differ\GenDiff;
-use Differ\ParserFiles;
 
 const DOC = <<<'DOCOPT'
 Generate diff
@@ -21,7 +20,9 @@ function start()
 {
     $result = \Docopt::handle(DOC);
 
-    $firstFile = new ParserFiles($result["<firstFile>"]);
-    $secondFile = new ParserFiles($result["<secondFile>"]);
-    new GenDiff($firstFile, $secondFile, $result["--format"]);
+    $firstFile = $result["<firstFile>"];
+    $secondFile = $result["<secondFile>"];
+    $genDiff = new GenDiff($firstFile, $secondFile, $result["--format"]);
+    $difResult = "{".PHP_EOL.join(PHP_EOL, $genDiff->getInfo()).PHP_EOL."}".PHP_EOL;
+    echo $difResult;
 }
