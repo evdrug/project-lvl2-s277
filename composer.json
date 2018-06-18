@@ -1,0 +1,21 @@
+{
+    "name": "evdrug/gendiff",
+    "bin": [
+        "bin/gendiff"
+    ],
+    "description": "gendiff",
+    "authors": [
+        {
+            "name": "evdrug",
+            "email": "druzyakin.e@gmail.com"
+        }
+    ],
+    "require": {
+        "docopt/docopt": "^1.0"
+    },
+    "autoload": {
+        "files": [
+            "src/RunUtils.php"
+        ]
+    }
+}
