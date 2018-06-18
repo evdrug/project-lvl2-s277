@@ -23,6 +23,5 @@ function start()
     $firstFile = $result["<firstFile>"];
     $secondFile = $result["<secondFile>"];
     $genDiff = new GenDiff($firstFile, $secondFile, $result["--format"]);
-    $difResult = "{".PHP_EOL.join(PHP_EOL, $genDiff->getInfo()).PHP_EOL."}".PHP_EOL;
-    echo $difResult;
+    echo $genDiff;
 }

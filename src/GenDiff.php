@@ -17,6 +17,11 @@ class GenDiff
         $this->format = $format;
     }
 
+    public function __toString()
+    {
+        return $this->getInfo();
+    }
+
     public function getKeys($data1, $data2)
     {
         $merge = array_merge(array_keys($data1), array_keys($data2));
@@ -49,6 +54,7 @@ class GenDiff
 
     public function getInfo()
     {
-        return $this->diffFiles($this->firstFile->getFile(), $this->secondFile->getFile());
+        $diffResult = $this->diffFiles($this->firstFile->getFile(), $this->secondFile->getFile());
+        return "{".PHP_EOL.join(PHP_EOL, $diffResult).PHP_EOL."}".PHP_EOL;
     }
 }
