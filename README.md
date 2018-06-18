@@ -11,3 +11,7 @@
 ## gendiff ##
 
 #### The utility for finding differences in configuration files ####
+
+## Install ##
+    export PATH=~/.config/composer/vendor/bin:$PATH
+    composer global require evdrug/gendiff
