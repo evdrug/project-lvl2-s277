@@ -1,0 +1,10 @@
+language: php
+
+php:
+  - '7.0.20'
+
+install:
+  - composer self-update
+  - make install
+
+script: make lint
