@@ -7,6 +7,14 @@ function jsonReport($data)
     return json_encode($data, JSON_FORCE_OBJECT);
 }
 
+function normalizeBool($value)
+{
+    if (is_bool($value)) {
+        return $value ? 'true' : 'false';
+    }
+    return $value;
+}
+
 function prettyReport($data)
 {
     $childArray = function ($iter) {
@@ -15,6 +23,7 @@ function prettyReport($data)
             return $acc;
         }, '');
     };
+
     $result = function ($data, $repit) use (&$result, $childArray) {
         $repit = $repit + 1;
         $indent = function ($position) use ($repit) {
@@ -29,26 +38,31 @@ function prettyReport($data)
                     $acc[] = "}";
                     break;
                 case 'not changed':
-                    $acc[] = "{$indent(4)}{$item['property']}: {$item['before']}";
+                    $before = normalizeBool($item['before']);
+                    $acc[] = "{$indent(4)}{$item['property']}: {$before}";
                     break;
                 case 'changed':
-                    $acc[] = "{$indent(2)}- {$item['property']}: {$item['before']}";
-                    $acc[] = "{$indent(2)}+ {$item['property']}: {$item['after']}";
+                    $before = normalizeBool($item['before']);
+                    $after = normalizeBool($item['after']);
+                    $acc[] = "{$indent(2)}- {$item['property']}: {$before}";
+                    $acc[] = "{$indent(2)}+ {$item['property']}: {$after}";
                     break;
                 case 'removed':
-                    if (is_array($item['before'])) {
+                    $before = normalizeBool($item['before']);
+                    if (is_array($before)) {
 //                        $child = $childArray($item['before']);
 //                        $acc[] = "- {$item['property']}: {{$child}}";
                     } else {
-                        $acc[] = "{$indent(2)}- {$item['property']}: {$item['before']}";
+                        $acc[] = "{$indent(2)}- {$item['property']}: {$before}";
                     }
                     break;
                 case 'added':
-                    if (is_array($item['after'])) {
+                    $after = normalizeBool($item['after']);
+                    if (is_array($after)) {
 //                        $child = $childArray($item['after']);
 //                        $acc[] = "+ {$item['property']}: {{$child}}";
                     } else {
-                        $acc[] = "{$indent(2)}+ {$item['property']}: {$item['after']}";
+                        $acc[] = "{$indent(2)}+ {$item['property']}: {$after}";
                     }
                     break;
             }
