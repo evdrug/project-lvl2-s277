@@ -2,7 +2,8 @@
 
 namespace Differ\RunUtils;
 
-use Differ\GenDiff;
+use function Differ\GenerateDiff\diffFiles;
+use Funct\Collection;
 
 const DOC = <<<'DOCOPT'
 Generate diff
@@ -22,6 +23,7 @@ function start()
 
     $firstFile = $result["<firstFile>"];
     $secondFile = $result["<secondFile>"];
-    $genDiff = new GenDiff($firstFile, $secondFile, $result["--format"]);
-    echo $genDiff;
+    $genDiff =  diffFiles($firstFile, $secondFile, $result["--format"]);
+    print_r($genDiff);
+
 }

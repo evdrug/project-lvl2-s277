@@ -2,28 +2,28 @@
 
 namespace Test;
 
+use function Differ\Parser\dirPath;
+use function Differ\Parser\existsFile;
+use function Differ\Parser\parse;
 use PHPUnit\Framework\TestCase;
 use org\bovigo\vfs\vfsStream;
 
-class ParserFilesTest extends TestCase
+class parserTest extends TestCase
 {
-    protected $parser;
     protected $root;
 
     public function setUp()
     {
         $this->root = vfsStream::setUp('tmp');
-        $file = touch(vfsStream::url('tmp\test1.json'));
-        $this->parser = new \Differ\ParserFiles($file);
     }
 
     public function testDirPath()
     {
         $path1 = DIRECTORY_SEPARATOR."tmp".DIRECTORY_SEPARATOR."q";
-        $this->assertEquals($path1, $this->parser->dirPath($path1));
+        $this->assertEquals($path1, dirPath($path1));
         $this->assertEquals(
             vfsStream::url('tmp/test1.json'),
-            $this->parser->dirPath('test1.json', vfsStream::url('tmp'))
+            dirPath('test1.json', vfsStream::url('tmp'))
         );
     }
 
@@ -32,14 +32,14 @@ class ParserFilesTest extends TestCase
      */
     public function testExistsFileError()
     {
-        $this->parser->existsFile('test3.json', vfsStream::url('tmp'));
+        existsFile('test3.json', vfsStream::url('tmp'));
     }
 
     public function testExistsFile()
     {
         $this->assertNotEquals(
             vfsStream::url('tmp/test1.json'),
-            $this->parser->dirPath('../test3.json', vfsStream::url('tmp'))
+            dirPath('../test3.json', vfsStream::url('tmp'))
         );
     }
 
@@ -47,7 +47,7 @@ class ParserFilesTest extends TestCase
     {
         $json = '{"firstName": "John", "lastName": "Smith"}';
         $array = ['firstName' => 'John', 'lastName' => 'Smith'];
-        $this->assertArraySubset($array, $this->parser->parse($json, 'json'));
+        $this->assertArraySubset($array, parse($json, 'json'));
     }
 
     /**
@@ -56,7 +56,6 @@ class ParserFilesTest extends TestCase
     public function testParseError()
     {
         $json = '{"firstName": "John", "lastName": "Smith"}';
-        $array = ['firstName' => 'Johns', 'lastName' => 'Smith'];
-        $this->parser->parse($json, 'doc');
+        parse($json, 'doc');
     }
 }

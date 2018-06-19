@@ -23,8 +23,9 @@
     "autoload": {
         "files": [
             "src/RunUtils.php",
-            "src/ParserFiles.php",
-            "src/GenDiff.php"
+            "src/parser.php",
+            "src/generateDiff.php",
+            "src/reports.php"
         ]
     },
     "scripts": {
