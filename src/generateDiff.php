@@ -24,7 +24,6 @@ function genDiff($file1, $file2, $format = 'pretty')
 
 function genAst($data1, $data2)
 {
-
     $keys = getKeys($data1, $data2);
     $genData = function ($key, $dataBefore, $dataAfter, $action) {
         return [
@@ -34,9 +33,7 @@ function genAst($data1, $data2)
             'action' => $action
         ];
     };
-
     $result = array_reduce($keys, function ($acc, $key) use ($data1, $data2, $genData) {
-
         if (array_key_exists($key, $data1) && array_key_exists($key, $data2)) {
             if (is_array($data1[$key]) && is_array($data2[$key])) {
                 $acc[] = [
@@ -56,7 +53,6 @@ function genAst($data1, $data2)
         }
         return $acc;
     }, []);
-
     return $result;
 }
 

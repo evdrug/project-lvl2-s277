@@ -11,7 +11,6 @@ function prettyReport($data)
 {
     $childArray = function ($iter) {
         return array_reduce(array_keys($iter), function ($acc, $key) use ($iter) {
-            var_dump($key);
             $acc .= PHP_EOL."{$key}: {$iter[$key]}".PHP_EOL;
             return $acc;
         }, '');
