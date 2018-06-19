@@ -4,7 +4,7 @@ namespace Differ\Reports;
 
 function jsonReport($data)
 {
-    return json_encode($data);
+    return json_encode($data, JSON_FORCE_OBJECT);
 }
 
 function prettyReport($data)

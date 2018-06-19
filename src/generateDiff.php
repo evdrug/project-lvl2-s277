@@ -1,8 +1,9 @@
 <?php
-namespace Differ\GenerateDiff;
+namespace Differ;
 
-use function Differ\Parser\getFile;
+use function Differ\Parser\getParseFile;
 use function Differ\Reports\jsonReport;
+use function Differ\Reports\plainReport;
 use function Differ\Reports\prettyReport;
 
 function getKeys($data1, $data2)
@@ -12,13 +13,13 @@ function getKeys($data1, $data2)
     return array_values($unique);
 }
 
-function diffFiles($file1, $file2, $format = 'pretty')
+function genDiff($file1, $file2, $format = 'pretty')
 {
 
-    $data1 = getFile($file1);
-    $data2 = getFile($file2);
+    $data1 = getParseFile($file1);
+    $data2 = getParseFile($file2);
     $ast = genAst($data1, $data2);
-    return outputFormat($ast, $format);
+    return formatReport($ast, $format);
 }
 
 function genAst($data1, $data2)
@@ -59,7 +60,7 @@ function genAst($data1, $data2)
     return $result;
 }
 
-function outputFormat($data, $format)
+function formatReport($data, $format)
 {
     switch ($format) {
         case 'json':

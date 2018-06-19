@@ -1,17 +1,14 @@
 <?php
 namespace Test;
 
-use function Differ\GenerateDiff\diffFiles;
-use function Differ\GenerateDiff\genAst;
-use function Differ\GenerateDiff\getKeys;
+use function Differ\genAst;
+use function Differ\getKeys;
 use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
-use Differ\GenDiff;
 
 class generateDiffTest extends TestCase
 {
-//    public $parser;
-//    public $diff;
+
     public $data1 = ['a' => 1, 'b' => 2, 'c' => 3];
     public $data2  = ['a' => 1, 'd' => 4, 'c' => 66, 'f' => 5];
     protected $root;

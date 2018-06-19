@@ -2,9 +2,9 @@
 
 namespace Test;
 
-use function Differ\Parser\dirPath;
-use function Differ\Parser\existsFile;
-use function Differ\Parser\parse;
+use function Differ\Parser\parser;
+use function Differ\Parser\pathFullTransform;
+use function Differ\Parser\pathToFile;
 use PHPUnit\Framework\TestCase;
 use org\bovigo\vfs\vfsStream;
 
@@ -17,45 +17,45 @@ class parserTest extends TestCase
         $this->root = vfsStream::setUp('tmp');
     }
 
-    public function testDirPath()
+    public function testPathFullTransform()
     {
         $path1 = DIRECTORY_SEPARATOR."tmp".DIRECTORY_SEPARATOR."q";
-        $this->assertEquals($path1, dirPath($path1));
+        $this->assertEquals($path1, pathFullTransform($path1));
         $this->assertEquals(
             vfsStream::url('tmp/test1.json'),
-            dirPath('test1.json', vfsStream::url('tmp'))
+            pathFullTransform('test1.json', vfsStream::url('tmp'))
         );
     }
 
     /**
      * @expectedException Exception
      */
-    public function testExistsFileError()
+    public function testPathToFileError()
     {
-        existsFile('test3.json', vfsStream::url('tmp'));
+        pathToFile('test3.json', vfsStream::url('tmp'));
     }
 
-    public function testExistsFile()
+    public function testPathToFile()
     {
         $this->assertNotEquals(
             vfsStream::url('tmp/test1.json'),
-            dirPath('../test3.json', vfsStream::url('tmp'))
+            pathFullTransform('../test3.json', vfsStream::url('tmp'))
         );
     }
 
-    public function testParse()
+    public function testParser()
     {
         $json = '{"firstName": "John", "lastName": "Smith"}';
         $array = ['firstName' => 'John', 'lastName' => 'Smith'];
-        $this->assertArraySubset($array, parse($json, 'json'));
+        $this->assertArraySubset($array, parser($json, 'json'));
     }
 
     /**
     * @expectedException Exception
      */
-    public function testParseError()
+    public function testParserError()
     {
         $json = '{"firstName": "John", "lastName": "Smith"}';
-        parse($json, 'doc');
+        parser($json, 'doc');
     }
 }

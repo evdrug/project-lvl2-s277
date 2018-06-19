@@ -2,7 +2,7 @@
 
 namespace Differ\RunUtils;
 
-use function Differ\GenerateDiff\diffFiles;
+use function Differ\genDiff;
 use Funct\Collection;
 
 const DOC = <<<'DOCOPT'
@@ -19,10 +19,10 @@ DOCOPT;
 
 function start()
 {
-    $result = \Docopt::handle(DOC);
+    $handle = \Docopt::handle(DOC);
 
-    $firstFile = $result["<firstFile>"];
-    $secondFile = $result["<secondFile>"];
-    $genDiff =  diffFiles($firstFile, $secondFile, $result["--format"]);
+    $firstFile = $handle["<firstFile>"];
+    $secondFile = $handle["<secondFile>"];
+    $genDiff =  genDiff($firstFile, $secondFile, $handle["--format"]);
     print_r($genDiff);
 }

@@ -4,9 +4,9 @@ namespace Differ\Parser;
 
 use Symfony\Component\Yaml\Yaml;
 
-function existsFile($path, $rootDir = null)
+function pathToFile($path, $rootDir = null)
 {
-    $allPath = dirPath($path, $rootDir);
+    $allPath = pathFullTransform($path, $rootDir);
 
     if (file_exists($allPath)) {
         return $allPath;
@@ -14,7 +14,7 @@ function existsFile($path, $rootDir = null)
     throw new \Exception("File '{$path}' not found.");
 }
 
-function dirPath($path, $rootDir = null)
+function pathFullTransform($path, $rootDir = null)
 {
     $directory = $rootDir ? $rootDir : getcwd();
     if (strpos($path, DIRECTORY_SEPARATOR) === 0) {
@@ -34,7 +34,7 @@ function getFormatFile($path)
     return pathinfo($path, PATHINFO_EXTENSION);
 }
 
-function parse($data, $format)
+function parser($data, $format)
 {
     switch ($format) {
         case 'json':
@@ -48,9 +48,9 @@ function parse($data, $format)
     }
 }
 
-function getFile($file)
+function getParseFile($file)
 {
-    $response = openFile(existsFile($file));
+    $response = openFile(pathToFile($file));
     $format = getFormatFile($file);
-    return parse($response, $format);
+    return parser($response, $format);
 }
