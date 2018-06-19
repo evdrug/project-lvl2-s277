@@ -12,7 +12,7 @@ function getKeys($data1, $data2)
     return array_values($unique);
 }
 
-function diffFiles($file1, $file2, $format='pretty')
+function diffFiles($file1, $file2, $format = 'pretty')
 {
 
     $data1 = getFile($file1);

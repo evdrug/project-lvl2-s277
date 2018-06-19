@@ -25,5 +25,4 @@ function start()
     $secondFile = $result["<secondFile>"];
     $genDiff =  diffFiles($firstFile, $secondFile, $result["--format"]);
     print_r($genDiff);
-
 }

@@ -16,8 +16,8 @@ function prettyReport($data)
             return $acc;
         }, '');
     };
-    $result = function ($data,$repit) use (&$result, $childArray) {
-        $repit += 1;
+    $result = function ($data, $repit) use (&$result, $childArray) {
+        $repit = $repit + 1;
         $indent = function ($position) use ($repit) {
             return str_repeat(' ', $repit * $position);
         };
@@ -56,7 +56,7 @@ function prettyReport($data)
             return $acc;
         }, []);
     } ;
-    $responseDiff = "{".PHP_EOL.join($result($data,0), PHP_EOL).PHP_EOL."}".PHP_EOL;
+    $responseDiff = "{".PHP_EOL.join($result($data, 0), PHP_EOL).PHP_EOL."}".PHP_EOL;
     return $responseDiff;
 }
 
