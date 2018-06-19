@@ -2,6 +2,8 @@
 
 namespace Differ;
 
+use Symfony\Component\Yaml\Yaml;
+
 class ParserFiles
 {
     protected $file;
@@ -24,7 +26,7 @@ class ParserFiles
 
     public function dirPath($path, $rootDir = null)
     {
-        $directory = $rootDir ? $rootDir : __DIR__;
+        $directory = $rootDir ? $rootDir : getcwd();
         if (strpos($path, DIRECTORY_SEPARATOR) === 0) {
             return $path;
         }
@@ -47,6 +49,9 @@ class ParserFiles
         switch ($format) {
             case 'json':
                 return json_decode($data, true);
+                break;
+            case 'yaml':
+                return Yaml::parse($data);
                 break;
             default:
                 throw new \Exception("File format '{$format}' is not supported");
