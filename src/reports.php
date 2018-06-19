@@ -18,28 +18,30 @@ function prettyReport($data)
     };
     $result = function ($data,$repit) use (&$result, $childArray) {
         $repit += 1;
-        $indent = str_repeat('    ', $repit);
+        $indent = function ($position) use ($repit) {
+            return str_repeat(' ', $repit * $position);
+        };
         return array_reduce($data, function ($acc, $item) use ($result, $childArray, $indent, $repit) {
             switch ($item['action']) {
                 case 'nested':
                     $resultChild = $result($item['children'], $repit);
-                    $acc[] = "{$indent}{$item['property']}: {";
+                    $acc[] = "{$indent(4)}{$item['property']}: {";
                     $acc[] = $resultChild;
                     $acc[] = "}";
                     break;
                 case 'not changed':
-                    $acc[] = "{$indent}{$item['property']}: {$item['before']}";
+                    $acc[] = "{$indent(4)}{$item['property']}: {$item['before']}";
                     break;
                 case 'changed':
-                    $acc[] = "- {$item['property']}: {$item['before']}";
-                    $acc[] = "+ {$item['property']}: {$item['after']}";
+                    $acc[] = "{$indent(2)}- {$item['property']}: {$item['before']}";
+                    $acc[] = "{$indent(2)}+ {$item['property']}: {$item['after']}";
                     break;
                 case 'removed':
                     if (is_array($item['before'])) {
 //                        $child = $childArray($item['before']);
 //                        $acc[] = "- {$item['property']}: {{$child}}";
                     } else {
-                        $acc[] = "- {$item['property']}: {$item['before']}";
+                        $acc[] = "{$indent(2)}- {$item['property']}: {$item['before']}";
                     }
                     break;
                 case 'added':
@@ -47,7 +49,7 @@ function prettyReport($data)
 //                        $child = $childArray($item['after']);
 //                        $acc[] = "+ {$item['property']}: {{$child}}";
                     } else {
-                        $acc[] = "+ {$item['property']}: {$item['after']}";
+                        $acc[] = "{$indent(2)}+ {$item['property']}: {$item['after']}";
                     }
                     break;
             }
