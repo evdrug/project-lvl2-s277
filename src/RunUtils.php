@@ -16,5 +16,9 @@ DOCOPT;
 
 function start()
 {
-    \Docopt::handle(DOC);
+    $handle = \Docopt::handle(DOC);
+    $pathToFile1 = $handle['<firstFile>'];
+    $pathToFile2 = $handle['<secondFile>'];
+    $diff = \Differ\genDiff($pathToFile1, $pathToFile2, $handle['--format']);
+    print_r($diff);
 }
