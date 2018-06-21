@@ -3,7 +3,6 @@
 namespace Differ\RunUtils;
 
 use function Differ\genDiff;
-use Funct\Collection;
 
 const DOC = <<<'DOCOPT'
 Generate diff

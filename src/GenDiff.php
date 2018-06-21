@@ -2,7 +2,6 @@
 
 namespace Differ;
 
-use function Differ\OpenFile\openFile;
 use function Differ\Parser\parseToFormat;
 use function Differ\Reports\reportToFormat;
 
@@ -13,20 +12,25 @@ function getKeys($data1, $data2)
     return array_values($unique);
 }
 
-function normalizeBool($value)
+function pathToFile($path)
 {
-    if (is_bool($value)) {
-        return $value ? 'true' : 'false';
+    if (file_exists($path)) {
+        return $path;
     }
-    return $value;
+    throw new \Exception("File '{$path}' not found.");
+}
+
+function getFile($path)
+{
+    return file_get_contents(pathToFile($path));
 }
 
 function genDiff($file1, $file2, $format = "pretty")
 {
     $formatFile1 = pathinfo($file1, PATHINFO_EXTENSION);
     $formatFile2 = pathinfo($file2, PATHINFO_EXTENSION);
-    $data1 = parseToFormat($file1, $formatFile1);
-    $data2 = parseToFormat($file2, $formatFile2);
+    $data1 = parseToFormat(getFile($file1), $formatFile1);
+    $data2 = parseToFormat(getFile($file2), $formatFile2);
 
     return reportToFormat(genDiffAst($data1, $data2), $format);
 }
@@ -54,27 +58,25 @@ function genDiffAst($data1, $data2)
     $genDiff = function ($data1, $data2) use (&$genDiff) {
         $keys = getKeys($data1, $data2);
         $result = array_reduce($keys, function ($acc, $key) use ($data1, $data2, $genDiff) {
-            $value1 = isset($data1[$key]) ? normalizeBool($data1[$key]) : null;
-            $value2 = isset($data2[$key]) ? normalizeBool($data2[$key]) : null;
             if (array_key_exists($key, $data1) && array_key_exists($key, $data2)) {
-                if (is_array($value1) && is_array($value2)) {
-                    $acc[] = genAstElement($key, null, null, 'nested', $genDiff($value1, $value2));
-                } elseif ($value1 === $value2) {
-                    $acc[] = genAstElement($key, $value1, $value2, 'not changed');
+                if (is_array($data1[$key]) && is_array($data2[$key])) {
+                    $acc[] = genAstElement($key, null, null, 'nested', $genDiff($data1[$key], $data2[$key]));
+                } elseif ($data1[$key] === $data2[$key]) {
+                    $acc[] = genAstElement($key, $data1[$key], $data2[$key], 'not changed');
                 } else {
-                    $acc[] = genAstElement($key, $value1, $value2, 'changed');
+                    $acc[] = genAstElement($key, $data1[$key], $data2[$key], 'changed');
                 }
             } elseif (array_key_exists($key, $data1)) {
-                if (is_array($value1)) {
-                    $acc[] = genAstElement($key, $value1, $value2, 'removed', childList($value1));
+                if (is_array($data1[$key])) {
+                    $acc[] = genAstElement($key, $data1[$key], null, 'removed');
                 } else {
-                    $acc[] = genAstElement($key, $value1, $value2, 'removed');
+                    $acc[] = genAstElement($key, $data1[$key], null, 'removed');
                 }
             } else {
-                if (is_array($value2)) {
-                    $acc[] = genAstElement($key, null, null, 'added', childList($value2));
+                if (is_array($data2[$key])) {
+                    $acc[] = genAstElement($key, null, $data2[$key], 'added');
                 } else {
-                    $acc[] = genAstElement($key, null, $value2, 'added');
+                    $acc[] = genAstElement($key, null, $data2[$key], 'added');
                 }
             }
             return $acc;

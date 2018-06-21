@@ -24,8 +24,7 @@
             "src/RunUtils.php",
             "src/GenDiff.php",
             "src/Parser.php",
-            "src/Reports.php",
-            "src/OpenFile.php"
+            "src/Reports.php"
         ]
     },
     "scripts": {

@@ -2,9 +2,7 @@
 
 namespace Differ\Reports;
 
-use function Funct\Collection\flatten;
 use function Funct\Collection\flattenAll;
-use PHP_CodeSniffer\Tokenizers\PHP;
 
 function reportToFormat($data, $format)
 {
@@ -32,6 +30,14 @@ function reportJson($data)
     return json_encode($data, JSON_FORCE_OBJECT);
 }
 
+function normalizeValue($value)
+{
+    if (is_bool($value)) {
+        return $value ? 'true' : 'false';
+    }
+    return $value;
+}
+
 function reportPretty($data)
 {
     $reportChild = function ($child) use (&$reportChild) {
@@ -39,7 +45,7 @@ function reportPretty($data)
             if (is_array($item)) {
                 return $reportChild($item);
             } else {
-                return "    {$child[$item]['key']}: {$child[$item]['value']}";
+                return "    {$item}: {$child[$item]}";
             }
         }, array_keys($child));
     };
@@ -52,12 +58,13 @@ function reportPretty($data)
         return array_reduce($data, function ($acc, $item) use ($report, $reportChild, $indent, $repit) {
             [
                 'property' => $property,
-                'before' => $before,
-                'after' => $after,
+                'before' => $rawBefore,
+                'after' => $rawAfter,
                 'action' => $action,
                 'children' => $children
             ] = $item;
-
+            $before = normalizeValue($rawBefore);
+            $after = normalizeValue($rawAfter);
             switch ($action) {
                 case 'nested':
                     $resultChild = $report($children, $repit + 2);
@@ -74,8 +81,8 @@ function reportPretty($data)
 
                     break;
                 case 'removed':
-                    if (is_array($children)) {
-                        $child = join('', $reportChild($children));
+                    if (is_array($before)) {
+                        $child = join('', $reportChild($before));
                         $acc[] = "{$indent()}- {$property}: {";
                         $acc[] = "{$indent(2)}{$child}";
                         $acc[] = "{$indent()}  }";
@@ -84,8 +91,8 @@ function reportPretty($data)
                     }
                     break;
                 case 'added':
-                    if (is_array($children)) {
-                        $child = join('', $reportChild($children));
+                    if (is_array($after)) {
+                        $child = join('', $reportChild($after));
                         $acc[] = "{$indent()}+ {$property}: {";
                         $acc[] = "{$indent(2)}{$child}";
                         $acc[] = "{$indent()}  }";

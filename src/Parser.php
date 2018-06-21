@@ -2,13 +2,10 @@
 
 namespace Differ\Parser;
 
-use function Differ\OpenFile\openFile;
 use Symfony\Component\Yaml\Yaml;
 
-function parseToFormat($file, $format)
+function parseToFormat($data, $format)
 {
-    $data = openFile($file);
-
     $formatMapp = [
         "json" => function ($data) {
             return jsonParser($data);
