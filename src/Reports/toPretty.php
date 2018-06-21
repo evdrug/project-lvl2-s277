@@ -1,42 +1,7 @@
 <?php
-
 namespace Differ\Reports;
 
 use function Funct\Collection\flattenAll;
-
-function reportToFormat($data, $format)
-{
-    $reportFormatMap = [
-        'json' => function ($data) {
-            return reportJson($data);
-        },
-        'pretty' => function ($data) {
-            return reportPretty($data);
-        },
-        'plain' => function ($data) {
-            return reportPlain($data);
-        }
-    ];
-
-    if (!empty($reportFormatMap[$format])) {
-        return $reportFormatMap[$format]($data);
-    } else {
-        throw new \Exception("Report format '{$format}' is not supported");
-    }
-}
-
-function reportJson($data)
-{
-    return json_encode($data, JSON_FORCE_OBJECT);
-}
-
-function normalizeValue($value)
-{
-    if (is_bool($value)) {
-        return $value ? 'true' : 'false';
-    }
-    return $value;
-}
 
 function reportPretty($data)
 {
@@ -105,8 +70,4 @@ function reportPretty($data)
         }, []);
     } ;
     return "{".PHP_EOL.join(PHP_EOL, flattenAll($report($data, 0))).PHP_EOL."}".PHP_EOL;
-}
-
-function reportPlain($data)
-{
 }

@@ -27,6 +27,12 @@ class GenDiffTest extends TestCase
         $pathFile2 = __DIR__ . "/fixtures/after2.json";
         $this->assertEquals(Result\REC_FILE, Differ\genDiff($pathFile1, $pathFile2));
     }
+    public function testGenDiffRecFileJsonReportPlain()
+    {
+        $pathFile1 = __DIR__ . "/fixtures/before2.json";
+        $pathFile2 = __DIR__ . "/fixtures/after2.json";
+        $this->assertEquals(Result\REC_FILE_PLAIN, Differ\genDiff($pathFile1, $pathFile2, 'plain'));
+    }
 
     public function testGenDiffFlatFileYaml()
     {

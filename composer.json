@@ -24,7 +24,10 @@
             "src/RunUtils.php",
             "src/GenDiff.php",
             "src/Parser.php",
-            "src/Reports.php"
+            "src/Reports/Report.php",
+            "src/Reports/toPlain.php",
+            "src/Reports/toPretty.php",
+            "src/Reports/toJson.php"
         ]
     },
     "scripts": {
