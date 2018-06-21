@@ -23,8 +23,6 @@ function start()
 
     $firstFile = $handle["<firstFile>"];
     $secondFile = $handle["<secondFile>"];
-    $genDiff = \Differ\genDiff($firstFile, $secondFile, $handle["--format"]);
+    $genDiff =  genDiff($firstFile, $secondFile, $handle["--format"]);
     print_r($genDiff);
-    var_dump($genDiff);
-
 }
