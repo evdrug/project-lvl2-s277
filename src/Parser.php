@@ -4,7 +4,7 @@ namespace Differ\Parser;
 
 use Symfony\Component\Yaml\Yaml;
 
-function parseToFormat($data, $format)
+function parse($data, $format)
 {
     $formatMapp = [
         "json" => function ($data) {
