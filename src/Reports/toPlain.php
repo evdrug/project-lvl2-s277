@@ -16,7 +16,7 @@ function reportPlain($data)
             $before = normalizeValue($rawBefore);
             switch ($action) {
                 case 'nested':
-                    $nameParent = "{$property}.";
+                    $nameParent = "{$property}.{$parent}";
                     $acc[] = join(PHP_EOL, $report($children, $nameParent));
                     break;
                 case 'removed':
@@ -25,11 +25,12 @@ function reportPlain($data)
                     break;
                 case 'added':
                     $value = is_array($after) ? "complex value" : $after ;
-
                     $acc[] = "Property '{$parent}{$property}' was added with value: '{$value}'";
                     break;
                 case 'changed':
-                    $acc[] = "Property '{$parent}{$property}' was changed. From '{$before}' to '{$after}'";
+                    $valueAfter = is_array($after) ? "complex value" : $after ;
+                    $valueBefore = is_array($before) ? "complex value" : $before ;
+                    $acc[] = "Property '{$parent}{$property}' was changed. From '{$valueBefore}' to '{$valueAfter}'";
                     break;
             }
             return $acc;
